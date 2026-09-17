@@ -1,7 +1,6 @@
-import { ACTIVE_CATEGORIES } from './config';
-import { Corridor, Infrastructure, Layout, Property, PropertyType } from './types';
+import { Corridor, Infrastructure, Layout, Property } from './types';
 
-const INFRA = {
+export const INFRA = {
   dtcp: { id: 'dtcp', name: 'DTCP Approved Layout', icon: '📐', category: 'Approvals' as const },
   rera: { id: 'rera', name: 'RERA Registered', icon: '🏛️', category: 'Approvals' as const },
   cmda: { id: 'cmda', name: 'CMDA Approved', icon: '📜', category: 'Approvals' as const },
@@ -24,7 +23,7 @@ const INFRA = {
   guard: { id: 'guard', name: '24/7 Security Cabin', icon: '🔒', category: 'Security' as const },
 } satisfies Record<string, Infrastructure>;
 
-const LAND_PHOTOS = {
+export const LAND_PHOTOS = {
   meadow: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&q=80',
   openField: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=1200&q=80',
   hills: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&q=80',
@@ -41,7 +40,8 @@ const LAND_PHOTOS = {
 
 export const FALLBACK_PHOTO = LAND_PHOTOS.meadow;
 
-const allProperties: Property[] = [
+/** Initial catalogue used to seed the database on first run; runtime reads come from the DB. */
+export const SEED_PROPERTIES: Property[] = [
   {
     id: '1',
     slug: 'vk-emerald-acres-sholinganallur',
@@ -835,7 +835,7 @@ export const corridors: Corridor[] = [
   },
 ];
 
-export const layouts: Layout[] = [
+export const SEED_LAYOUTS: Layout[] = [
   {
     id: 'l1',
     name: 'VK Emerald Acres',
@@ -917,27 +917,3 @@ export const layouts: Layout[] = [
   },
 ];
 
-const isActive = (type: PropertyType) => ACTIVE_CATEGORIES.includes(type);
-
-export const properties: Property[] = allProperties.filter((p) => isActive(p.type));
-
-export const activeLayouts: Layout[] = layouts.filter((l) => isActive(l.category));
-
-export const getPropertyBySlug = (slug: string): Property | undefined =>
-  properties.find((p) => p.slug === slug);
-
-export const getFeaturedProperties = (): Property[] => properties.filter((p) => p.featured);
-
-export const getNewLaunches = (): Property[] => properties.filter((p) => p.newLaunch);
-
-export const getPropertiesByCorridor = (corridor: string): Property[] =>
-  properties.filter((p) => p.corridor === corridor);
-
-export const totalAvailablePlots = properties.reduce(
-  (sum, p) => sum + (p.land?.availablePlots ?? 0),
-  0,
-);
-
-export const lowestPricePerSqft = Math.min(
-  ...properties.map((p) => p.land?.pricePerSqft ?? Infinity),
-);

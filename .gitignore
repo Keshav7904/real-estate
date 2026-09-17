@@ -42,3 +42,6 @@ next-env.d.ts
 
 # CRM lead exports contain personal data - keep out of the repo
 /CRM/
+
+# runtime database, uploads and generated credentials
+/data/

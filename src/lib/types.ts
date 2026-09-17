@@ -3,6 +3,7 @@ export type PropertyType = 'Plot' | 'Apartment' | 'Villa' | 'Commercial';
 export type Facing =
   | 'North' | 'South' | 'East' | 'West'
   | 'North-East' | 'North-West' | 'South-East' | 'South-West';
+export const FACINGS: Facing[] = ['North', 'South', 'East', 'West', 'North-East', 'North-West', 'South-East', 'South-West'];
 
 export type Approval = 'DTCP' | 'RERA' | 'CMDA' | 'Panchayat';
 
@@ -122,30 +123,158 @@ export interface Layout {
   features: string[];
 }
 
+/* ===== Admin / CRM domain ===== */
+
+export type Role = 'admin' | 'manager' | 'sales' | 'customer';
+
+export type PlotStatus = 'Available' | 'Reserved' | 'Sold' | 'Blocked';
+export const PLOT_STATUSES: PlotStatus[] = ['Available', 'Reserved', 'Sold', 'Blocked'];
+
+export type LeadStatus =
+  | 'New' | 'Contacted' | 'Follow-up' | 'Site Visit Scheduled' | 'Negotiation' | 'Converted' | 'Lost';
+export const LEAD_STATUSES: LeadStatus[] = [
+  'New', 'Contacted', 'Follow-up', 'Site Visit Scheduled', 'Negotiation', 'Converted', 'Lost',
+];
+
+export type VisitStatus = 'Requested' | 'Confirmed' | 'Completed' | 'Cancelled' | 'Rescheduled';
+export const VISIT_STATUSES: VisitStatus[] = ['Requested', 'Confirmed', 'Completed', 'Cancelled', 'Rescheduled'];
+
+export type MediaKind = 'image' | 'video' | 'brochure' | 'document';
+export const MEDIA_KINDS: MediaKind[] = ['image', 'video', 'brochure', 'document'];
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: Role;
+  status: 'active' | 'inactive';
+  createdAt: string;
+  updatedAt: string;
+  lastLoginAt: string | null;
+}
+
+export interface LayoutRecord {
+  id: string;
+  slug: string;
+  name: string;
+  builder: string;
+  location: string;
+  corridor: string;
+  city: string;
+  address: string;
+  lat: number;
+  lng: number;
+  status: Property['status'];
+  possession: string;
+  description: string;
+  priceLakhs: number;
+  priceLabel: string;
+  pricePerSqft: number;
+  landArea: string;
+  landUse: LandUse;
+  approvals: Approval[];
+  approvalId: string;
+  roadWidth: string;
+  facingOptions: Facing[];
+  appreciation: string;
+  soil: string;
+  waterSource: string;
+  loanEligible: boolean;
+  gated: boolean;
+  highlights: string[];
+  infrastructure: string[];
+  photos: string[];
+  videoUrl: string | null;
+  nearby: NearbyPlace[];
+  priceBreakdown: PriceItem[];
+  documents: LandDocument[];
+  featured: boolean;
+  newLaunch: boolean;
+  active: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PlotRecord {
+  id: string;
+  layoutId: string;
+  layoutName?: string;
+  number: string;
+  area: number;
+  dimensions: string;
+  facing: Facing;
+  corner: boolean;
+  priceLakhs: number;
+  priceLabel: string;
+  status: PlotStatus;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Lead {
   id: string;
   name: string;
-  mobile: string;
+  phone: string;
   email: string;
-  propertyId: string;
-  propertyTitle: string;
+  layoutId: string | null;
+  layoutName?: string | null;
+  plotId: string | null;
+  plotNumber?: string | null;
   budget: string;
-  visitDate?: string;
-  message?: string;
-  status: 'New' | 'Contacted' | 'Hot' | 'Closed';
+  source: string;
+  status: LeadStatus;
+  assignedTo: string | null;
+  assignedName?: string | null;
+  notes: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface SiteVisit {
   id: string;
-  propertyId: string;
-  propertyTitle: string;
-  name: string;
-  mobile: string;
-  date: string;
-  time: string;
+  leadId: string | null;
+  customerName: string;
+  phone: string;
+  layoutId: string | null;
+  layoutName?: string | null;
+  preferredDate: string;
+  preferredTime: string;
   visitors: number;
-  status: 'Pending' | 'Confirmed' | 'Completed' | 'Cancelled';
+  pickup: boolean;
+  assignedTo: string | null;
+  assignedName?: string | null;
+  status: VisitStatus;
+  notes: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MediaItem {
+  id: string;
+  layoutId: string | null;
+  layoutName?: string | null;
+  kind: MediaKind;
+  title: string;
+  fileName: string;
+  mime: string;
+  size: number;
+  isPublic: boolean;
+  uploadedBy: string | null;
+  createdAt: string;
+  url: string;
+}
+
+export interface AuditLog {
+  id: string;
+  userId: string | null;
+  userName?: string | null;
+  action: string;
+  entity: string;
+  entityId: string | null;
+  details: Record<string, unknown>;
+  ip: string | null;
+  createdAt: string;
 }
 
 export interface FloorPlan {

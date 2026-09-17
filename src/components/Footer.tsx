@@ -135,7 +135,6 @@ export default function Footer() {
             {['Privacy Policy', 'Terms of Use', 'RERA Disclosure'].map((t) => (
               <a key={t} href="#" style={{ color: 'rgba(255,255,255,0.42)', fontSize: 13, textDecoration: 'none' }}>{t}</a>
             ))}
-            <Link href="/admin" style={{ color: 'rgba(255,255,255,0.42)', fontSize: 13, textDecoration: 'none' }}>Admin</Link>
           </div>
         </div>
       </div>
